@@ -1,0 +1,10 @@
+setuptools==78.1.1
+wheel==0.45.1
+
+pypdf2~=3.0.1
+numpy~=2.3.0
+scipy~=1.15.3
+opencv-python~=4.11.0.86
+pillow~=11.2.1
+requests~=2.32.4
+python-dotenv~=1.1.0
