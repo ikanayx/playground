@@ -1,12 +1,15 @@
 import cv2
-import time
 from os.path import join, exists
 from os import mkdir
 from PIL import Image
+import argparse
 
 
-def opencv_handler(src_dir, dst_dir, file_name, split_height = 1024):
-    img = cv2.imread(join(str(src_dir), str(file_name)))
+def opencv_handler(src_dir, dst_dir, split_height = 1024):
+    if not exists(dst_dir):
+        mkdir(dst_dir)
+
+    img = cv2.imread(src_dir)
     shape = img.shape
     print(shape)
     height = shape[0]
@@ -27,8 +30,11 @@ def opencv_handler(src_dir, dst_dir, file_name, split_height = 1024):
         serial_no = serial_no + 1
 
 
-def pillow_handler(src_dir, dst_dir, file_name, split_height = 1024):
-    img = Image.open(join(str(src_dir), str(file_name)))
+def pillow_handler(src_dir, dst_dir, split_height = 1024):
+    if not exists(dst_dir):
+        mkdir(dst_dir)
+
+    img = Image.open(src_dir)
     shape = img.size
     print(shape)
     height = shape[1]
@@ -50,15 +56,19 @@ def pillow_handler(src_dir, dst_dir, file_name, split_height = 1024):
 
 
 if __name__ == '__main__':
-    src_dir0 = '/path/to/long_image'
-    dst_dir0 = '/path/to/split_image_' + str(int(time.time()))
-    # split_time = time.strftime('%Y%m%d_%H%M', time.localtime(time.time()))
-    if not exists(dst_dir0):
-        mkdir(dst_dir0)
-    file_name0 = "rule.png"
-    delta = 1200
+    parser = argparse.ArgumentParser(description='切割长图片为多张短图')
+    parser.add_argument('--input', required=True, help='输入图片路径')
+    parser.add_argument('--output', required=True, help='输出图片目录')
+    parser.add_argument('--delta', type=float, default=750, help='每张图片高度，默认为750')
+
+    args = parser.parse_args()
+
+    src_dir0 = args.input
+    dst_dir0 = args.output
+
+    delta = args.delta
     # opencv比较快，裁剪出来的图体积较大，python依赖包也大
-    # opencv_handler(src_dir0, dst_dir0, file_name0, delta)
+    # opencv_handler(src_dir0, dst_dir0, delta)
 
     # pillow与opencv相比处理较慢，裁剪出来的图片文件体积比opencv的小
-    pillow_handler(src_dir0, dst_dir0, file_name0, delta)
+    pillow_handler(src_dir0, dst_dir0, delta)
