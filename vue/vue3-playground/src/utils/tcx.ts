@@ -41,7 +41,7 @@ export async function parseTcxFile(
     const trackPoints = xmlDoc.getElementsByTagName('Trackpoint')
     const activities = xmlDoc.getElementsByTagName('Activity')
     const activityType =
-      activities.length > 0 ? activities[0].getAttribute('Sport') || 'unknown' : 'unknown'
+      activities.length > 0 ? activities[0]!.getAttribute('Sport') || 'unknown' : 'unknown'
 
     const result = {
       activityType: activityType,
@@ -50,7 +50,7 @@ export async function parseTcxFile(
 
     // 5. 遍历所有轨迹点
     for (let i = 0; i < trackPoints.length; i++) {
-      const point = trackPoints[i]
+      const point = trackPoints[i]!
       const timeElem = point.getElementsByTagName('Time')[0]
       const positionElem = point.getElementsByTagName('Position')[0]
       const distanceElem = point.getElementsByTagName('DistanceMeters')[0]
@@ -70,8 +70,8 @@ export async function parseTcxFile(
 
       // 只有包含位置数据的点才处理
       if (positionElem) {
-        const latitudeElem = positionElem.getElementsByTagName('LatitudeDegrees')[0]
-        const longitudeElem = positionElem.getElementsByTagName('LongitudeDegrees')[0]
+        const latitudeElem = positionElem.getElementsByTagName('LatitudeDegrees')[0]!
+        const longitudeElem = positionElem.getElementsByTagName('LongitudeDegrees')[0]!
 
         const trackPoint = {
           time: timeElem?.textContent ? timeElem.textContent : null,
@@ -96,8 +96,8 @@ export async function parseTcxFile(
     // 6. 计算缺失的速度数据（如果原始文件没有提供）
     if (result.trackPoints.length > 1) {
       for (let i = 1; i < result.trackPoints.length; i++) {
-        const prevPoint = result.trackPoints[i - 1]
-        const currPoint = result.trackPoints[i]
+        const prevPoint = result.trackPoints[i - 1]!
+        const currPoint = result.trackPoints[i]!
 
         // 如果原始数据没有速度，但有时间差和距离差，则计算速度
         if (currPoint.speed === null && prevPoint.time && currPoint.time) {
