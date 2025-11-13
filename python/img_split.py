@@ -1,3 +1,5 @@
+import os
+
 import cv2
 from os.path import join, exists
 from os import mkdir
@@ -30,11 +32,18 @@ def opencv_handler(src_dir, dst_dir, split_height = 1024):
         serial_no = serial_no + 1
 
 
-def pillow_handler(src_dir, dst_dir, split_height = 1024):
+def pillow_handler(src_file_path, dst_dir, split_height = 1024):
+
+    # 步骤1：提取文件名（包含扩展名）
+    file_name_with_ext = os.path.basename(src_file_path)  # 结果："report.pdf"
+    # 步骤2：分割文件名和扩展名，取文件名部分
+    file_name = os.path.splitext(file_name_with_ext)[0]  # 结果："report"
+
+    dst_dir = join(dst_dir, file_name)
     if not exists(dst_dir):
         mkdir(dst_dir)
 
-    img = Image.open(src_dir)
+    img = Image.open(src_file_path)
     shape = img.size
     print(shape)
     height = shape[1]
@@ -48,7 +57,7 @@ def pillow_handler(src_dir, dst_dir, split_height = 1024):
         start_y = offset
         end_y = min(start_y + split_height, height)
         cropped = img.crop((0, start_y, width, end_y))  # (left, upper, right, lower)
-        cropped.save(join(str(dst_dir), "img_" + str(serial_no) + ".png"))
+        cropped.save(join(str(dst_dir), file_name + "_" + str(serial_no) + ".png"))
         if end_y == height:
             break
         offset = end_y
