@@ -1,5 +1,5 @@
 .idea
 .DS_Store
-.env
+python/.env
 node_modules
 *.local
