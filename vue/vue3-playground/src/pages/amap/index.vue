@@ -9,12 +9,12 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from 'vue'
-import AMapLoader from '@amap/amap-jsapi-loader'
-import { parseTcxFile, type TrackPointType } from '@/utils/tcx'
 import { adjustColorBrightness, getBrightGradientColor } from '@/utils/colors'
-import { simplify, simplifyDouglas, wgs84ToGcj02 } from '@/utils/coordinate'
+import { simplifyDouglas, wgs84ToGcj02 } from '@/utils/coordinate'
+import { parseTcxFile, type TrackPointType } from '@/utils/tcx'
 import { loadYpx } from '@/utils/ypx'
+import AMapLoader from '@amap/amap-jsapi-loader'
+import { onMounted, onUnmounted, ref } from 'vue'
 
 const amap = ref()
 const overlaysVisible = ref<Record<string, boolean>>({
@@ -475,13 +475,16 @@ onMounted(() => {
   const mapOption = {
     mapStyle: import.meta.env.VITE_AMAP_MAP_STYLE,
   }
+
+  const convert = (p: TrackPointType): TrackPointType => ({ ...p, ...wgs84ToGcj02(p.lng, p.lat) })
+
   Promise.all([
     initMap(mapConfig, mapOption),
     Promise.all([
       loadTcx('/data/13238395397.tcx'),
       loadTcx('/data/13265099379.tcx'),
-      // loadYpx('/data/1023642168.ypx'), // 江湾大桥附近
-      loadYpx('/data/1043960695.ypx'),
+      // loadYpx('/data/1023642168.ypx').then((r) => r.map(convert)), // 江湾大桥附近
+      loadYpx('/data/1043960695.ypx').then((r) => r.map(convert)),
     ]),
     loadJson('/data/simple-data.json'),
   ]).then(async (results) => {

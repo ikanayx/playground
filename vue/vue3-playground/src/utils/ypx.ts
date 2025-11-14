@@ -1,4 +1,3 @@
-import { wgs84ToGcj02 } from './coordinate'
 import type { TrackPointType } from './tcx'
 
 export async function loadYpx(ypxUrl: string) {
@@ -18,7 +17,7 @@ export async function loadYpx(ypxUrl: string) {
   const points = [] as TrackPointType[]
   for (let i = 0; i < array.length; i += 2) {
     const point = JSON.parse(array[i]!) as number[]
-    const { lng, lat } = wgs84ToGcj02(point[1]! / 1000000, point[0]! / 1000000)
+    const [lng, lat] = [point[1]! / 1000000, point[0]! / 1000000]
     points.push({
       lng,
       lat,

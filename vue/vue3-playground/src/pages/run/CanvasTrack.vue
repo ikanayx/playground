@@ -15,8 +15,9 @@
 </template>
 
 <script setup lang="ts">
+import { wgs84ToGcj02 } from '@/utils/coordinate'
 import { base64ToBlob } from '@/utils/file'
-import { parseTcxFile } from '@/utils/tcx'
+import { parseTcxFile, type TrackPointType } from '@/utils/tcx'
 import { loadYpx } from '@/utils/ypx'
 import { onMounted, ref } from 'vue'
 
@@ -313,11 +314,14 @@ onMounted(async () => {
     simplifiedRatio: 1,
     lineWidth: 10,
   }
+
+  const convert = (p: TrackPointType): TrackPointType => ({ ...p, ...wgs84ToGcj02(p.lng, p.lat) })
+
   const res = await Promise.all([
     parseTcxFile('/data/13238395397.tcx').then((r) => r.trackPoints),
     parseTcxFile('/data/13265099379.tcx').then((r) => r.trackPoints),
-    loadYpx('/data/1023642168.ypx'),
-    loadYpx('/data/1043960695.ypx'),
+    loadYpx('/data/1023642168.ypx').then((r) => r.map(convert)),
+    loadYpx('/data/1043960695.ypx').then((r) => r.map(convert)),
   ])
 
   res.forEach((r) => {

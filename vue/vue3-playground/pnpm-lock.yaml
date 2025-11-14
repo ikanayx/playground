@@ -30,6 +30,9 @@ importers:
       '@types/amap-js-api':
         specifier: ^1.4.16
         version: 1.4.16
+      '@types/bmapgl':
+        specifier: ^0.0.7
+        version: 0.0.7
       '@types/node':
         specifier: ^22.18.11
         version: 22.19.1
@@ -584,6 +587,9 @@ packages:
 
   '@types/amap-js-api@1.4.16':
     resolution: {integrity: sha512-gfcEswuU4GNRdGAh74FhxfLlU6qxmVIJYPf3HV0uKucCWQ9iSr8TonDhqBvHVmmQEY60K+UAeIh0YLwKo/jpFQ==}
+
+  '@types/bmapgl@0.0.7':
+    resolution: {integrity: sha512-3R0wFbZtynfHBJq0v477amaNH3t2u2CzBo46ViIPDdOTEJJ+Ma/ql4X8tS2XjDZcZhDAr6QDWoqV8SZvp6STvA==}
 
   '@types/estree@1.0.8':
     resolution: {integrity: sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==}
@@ -2041,6 +2047,8 @@ snapshots:
   '@tsconfig/node22@22.0.2': {}
 
   '@types/amap-js-api@1.4.16': {}
+
+  '@types/bmapgl@0.0.7': {}
 
   '@types/estree@1.0.8': {}
 

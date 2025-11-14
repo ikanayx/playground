@@ -27,6 +27,36 @@ export function wgs84ToGcj02(lng: number, lat: number): { lng: number; lat: numb
 }
 
 /**
+ * WGS84转BD09坐标系
+ * @param wgs84 WGS84坐标点 {lng: 经度, lat: 纬度}
+ * @returns BD09坐标点 {lng: 经度, lat: 纬度}
+ */
+export function wgs84ToBd09(lng: number, lat: number): { lng: number; lat: number } {
+  // 先将WGS84转换为GCJ02
+  const gcj02 = wgs84ToGcj02(lng, lat)
+  // 再将GCJ02转换为BD09
+  return gcj02ToBd09(gcj02)
+}
+
+/**
+ * GCJ02转BD09坐标系
+ * @param gcj02 GCJ02坐标点
+ * @returns BD09坐标点
+ */
+export function gcj02ToBd09(gcj02: { lng: number; lat: number }): { lng: number; lat: number } {
+  const { lng: lng, lat: lat } = gcj02
+  const x = lng
+  const y = lat
+  const z = Math.sqrt(x * x + y * y) + 0.00002 * Math.sin(y * Math.PI)
+  const theta = Math.atan2(y, x) + 0.000003 * Math.cos(x * Math.PI)
+
+  return {
+    lng: z * Math.cos(theta) + 0.0065,
+    lat: z * Math.sin(theta) + 0.006,
+  }
+}
+
+/**
  * 使用高德接口批量转换坐标
  * 慎用，量大的时候直接卡死
  * @param lnglatArray 坐标数组
@@ -132,17 +162,17 @@ export function calculateDistance(lat1: number, lon1: number, lat2: number, lon2
 export function simplify(points: TrackPointType[], min: number = 1): TrackPointType[] {
   const simplified = [] as TrackPointType[]
   let last = 0
-  simplified.push(points[last])
+  simplified.push(points[last]!)
   for (let i = 1; i < points.length; i++) {
     const meter = calculateDistance(
-      points[last].lat,
-      points[last].lng,
-      points[i].lat,
-      points[i].lng,
+      points[last]!.lat,
+      points[last]!.lng,
+      points[i]!.lat,
+      points[i]!.lng,
     )
     if (meter < min) continue
     last = i
-    simplified.push(points[last])
+    simplified.push(points[last]!)
   }
   console.debug(`简化后点数量为:${simplified.length}`)
   return simplified
@@ -159,9 +189,9 @@ export function simplifyDouglas(track: number[][], epsilon: number): number[][] 
 
   // 计算点到线段的距离
   const distance = (p: number[], a: number[], b: number[]) => {
-    const [x, y] = p
-    const [x1, y1] = a
-    const [x2, y2] = b
+    const [x, y] = [p[0]!, p[1]!]
+    const [x1, y1] = [a[0]!, a[1]!]
+    const [x2, y2] = [b[0]!, b[1]!]
     const A = x - x1
     const B = y - y1
     const C = x2 - x1
@@ -192,7 +222,7 @@ export function simplifyDouglas(track: number[][], epsilon: number): number[][] 
   const end = track.length - 1
 
   for (let i = 1; i < end; i++) {
-    const dist = distance(track[i], track[0], track[end])
+    const dist = distance(track[i]!, track[0]!, track[end]!)
     if (dist > maxDist) {
       maxDist = dist
       index = i
@@ -200,13 +230,13 @@ export function simplifyDouglas(track: number[][], epsilon: number): number[][] 
   }
 
   // 递归简化
-  let result = []
+  let result = [] as number[][]
   if (maxDist > epsilon) {
     const left = simplifyDouglas(track.slice(0, index + 1), epsilon)
     const right = simplifyDouglas(track.slice(index), epsilon)
     result = left.slice(0, -1).concat(right)
   } else {
-    result = [track[0], track[end]]
+    result = [track[0]!, track[end]!]
   }
 
   return result
