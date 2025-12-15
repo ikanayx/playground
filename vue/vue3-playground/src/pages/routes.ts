@@ -1,6 +1,7 @@
 import AMapRoutes from './amap/route'
 import BMapRoutes from './baidu-map/route'
 import RunRoutes from './run/route'
+import VantRoutes from './vant/route'
 
 const pages = [
   // 高德地图DEMO
@@ -9,6 +10,8 @@ const pages = [
   ...BMapRoutes,
   // 跑步轨迹
   ...RunRoutes,
+  // VantUI库
+  ...VantRoutes,
 ]
 
 export { pages }

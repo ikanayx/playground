@@ -539,7 +539,7 @@ onUnmounted(() => {
 <style scoped>
 .container {
   width: 100%;
-  height: 100vh;
+  height: 80vh;
 }
 
 .buttons {

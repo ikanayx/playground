@@ -35,3 +35,6 @@ coverage
 
 # Vitest
 __screenshots__/
+
+python/.env
+python/city_district
