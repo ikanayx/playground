@@ -1,5 +1,6 @@
 import AMapRoutes from './amap/route'
 import BMapRoutes from './baidu-map/route'
+import CustomRoutes from './custom/route'
 import RunRoutes from './run/route'
 import VantRoutes from './vant/route'
 
@@ -12,6 +13,7 @@ const pages = [
   ...RunRoutes,
   // VantUI库
   ...VantRoutes,
+  ...CustomRoutes,
 ]
 
 export { pages }
