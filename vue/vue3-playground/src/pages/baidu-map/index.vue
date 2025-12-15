@@ -5,6 +5,7 @@
 </template>
 
 <script setup lang="ts">
+import { wgs84ToBd09 } from '@/utils/coordinate'
 import { loadJs } from '@/utils/dom'
 import { loadYpx } from '@/utils/ypx'
 import { onMounted } from 'vue'
@@ -47,8 +48,10 @@ function convert(points: BMapGL.Point[], srcType: COORDINATE_TYPE, dstType: COOR
 }
 
 async function initMap() {
-  const points = await loadYpx('/data/unknown_bd09.ypx')
-  const bd09 = points.map(({ lng, lat }) => ({ lng, lat }) as BMapGL.Point)
+  // const points = await loadYpx('/data/unknown_bd09.ypx')
+  // const bd09 = points.map(({ lng, lat }) => ({ lng, lat }) as BMapGL.Point)
+  const points = await loadYpx('/data/1177034309_wgs84.ypx')
+  const bd09 = points.map(({ lng, lat }) => wgs84ToBd09(lng, lat) as BMapGL.Point)
   //const bd09 = points.map((p) => wgs84ToBd09(p.lng, p.lat) as BMapGL.Point)
 
   const map = new BMapGL.Map('mapContainer') //地图初始化

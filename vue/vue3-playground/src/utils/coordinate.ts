@@ -44,11 +44,12 @@ export function wgs84ToBd09(lng: number, lat: number): { lng: number; lat: numbe
  * @returns BD09坐标点
  */
 export function gcj02ToBd09(gcj02: { lng: number; lat: number }): { lng: number; lat: number } {
+  const x_pi = (Math.PI * 3000.0) / 180.0
   const { lng: lng, lat: lat } = gcj02
   const x = lng
   const y = lat
-  const z = Math.sqrt(x * x + y * y) + 0.00002 * Math.sin(y * Math.PI)
-  const theta = Math.atan2(y, x) + 0.000003 * Math.cos(x * Math.PI)
+  const z = Math.sqrt(x * x + y * y) + 0.00002 * Math.sin(y * x_pi)
+  const theta = Math.atan2(y, x) + 0.000003 * Math.cos(x * x_pi)
 
   return {
     lng: z * Math.cos(theta) + 0.0065,

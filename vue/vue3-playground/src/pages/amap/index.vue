@@ -473,7 +473,8 @@ onMounted(() => {
     securityJsCode: import.meta.env.VITE_AMAP_SECURITY_JS_CODE,
   }
   const mapOption = {
-    mapStyle: import.meta.env.VITE_AMAP_MAP_STYLE,
+    // mapStyle: import.meta.env.VITE_AMAP_MAP_STYLE,
+    mapStyle: 'amap://styles/normal',
   }
 
   const convert = (p: TrackPointType): TrackPointType => ({ ...p, ...wgs84ToGcj02(p.lng, p.lat) })
@@ -481,10 +482,11 @@ onMounted(() => {
   Promise.all([
     initMap(mapConfig, mapOption),
     Promise.all([
-      loadTcx('/data/13238395397.tcx'),
-      loadTcx('/data/13265099379.tcx'),
+      // loadTcx('/data/13238395397.tcx'),
+      // loadTcx('/data/13265099379.tcx'),
       // loadYpx('/data/1023642168.ypx').then((r) => r.map(convert)), // 江湾大桥附近
-      loadYpx('/data/1043960695.ypx').then((r) => r.map(convert)),
+      // loadYpx('/data/1043960695.ypx').then((r) => r.map(convert)),
+      loadYpx('/data/1177034309_wgs84.ypx').then((r) => r.map(convert)),
     ]),
     loadJson('/data/simple-data.json'),
   ]).then(async (results) => {
